@@ -10,11 +10,11 @@ final class DB
     private function __construct()
     {
         try {
-           $host = getenv('DB_HOST') ?: 'geeta-mysql-server.mysql.database.azure.com';
+           $host = getenv('DB_HOST') ?: 'devp-mysql-server.mysql.database.azure.com';
             $port = getenv('DB_PORT') ?: '3306';
-            $name = getenv('DB_NAME') ?: 'geeta-db';
-            $user = getenv('DB_USER') ?: 'geetaadmin';
-            $pass = getenv('DB_PASS') ?: '{lcU2-g7beaQCPC';
+            $name = getenv('DB_NAME') ?: 'dev_geeta';
+            $user = getenv('DB_USER') ?: 'dev_miscos';
+            $pass = getenv('DB_PASS') ?: 'x!^(mEBad1rYSsvA';
             
             // For Azure Database - SSL is REQUIRED
             $this->conn = new \mysqli();
