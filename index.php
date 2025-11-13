@@ -4,7 +4,7 @@
   $event_date = "17 अक्टूबर - 1 नवंबर";
   $event_location = "भोपाल, मध्य प्रदेश";
   $chief_minister = "श्री मोहन यादव";
-  $base_url = "https://geetamahotsav.com";
+  $base_url = "https://dev-geeta-landing-page-bxgratg2esh0bjef.canadacentral-01.azurewebsites.net";
 ?>
 
 <!DOCTYPE html>
