@@ -155,5 +155,37 @@ echo json_encode([
     "restart_time"     => $restart_time,
     "last_que"         => $last_que
 ]);
+
+// $secret_key = 'c87a9e76a9e5e54f3ab86a9a7071cfbd2c3bdf51e64640f0e75b53b8d54b87a2'; 
+
+// // Your actual response array
+// $response = [
+//     "error_code"       => 200,
+//     "status"           => "success",
+//     "questions"        => $questions,
+//     "question_details" => $question_details,
+//     "exam_status"      => 1,
+//     "restart_time"     => $restart_time,
+//     "last_que"         => $last_que
+// ];
+
+// // Convert response to JSON
+// $jsonData = json_encode($response);
+
+// // Generate IV (16 bytes for AES-256-CBC)
+// $iv = openssl_random_pseudo_bytes(16);
+
+// // Encrypt data
+// $encrypted = openssl_encrypt($jsonData, 'AES-256-CBC', $secret_key, OPENSSL_RAW_DATA, $iv);
+
+// // Encode IV + ciphertext to base64 for transmission
+// $encoded = base64_encode($iv . $encrypted);
+
+// // Send response
+// http_response_code(200);
+// echo json_encode([
+//     "data" => $encoded
+// ]);
+
 exit;
 ?>

@@ -58,7 +58,8 @@ if ($email) {
     $mail_response = send_mail($otp, $email);
 }
 $response = [
-    "error_code" => 200, 
+    "error_code" => 200,
+    "otp" => $otp, 
     "limit" => $otp_attempt,
     "send_count" => $send_count
 ];
@@ -101,16 +102,16 @@ function send_mail($otp, $email) {
 
     return in_array($httpCode, [200, 202]);
 }
-function send_sms($mobile, $otp, $type = "Forgot Password") {
+
+function send_sms($mobile, $otp) {
     $authKey    = "472285A02FfvvxxWCo68e603a2P1";
-    $templateId = "69117507905c980b9423bfc3";
+    $templateId = "6909b790d493781108330f07";
 
     $postData = [
         "template_id" => $templateId,
         "recipients"  => [[
             "mobiles" => "91" . $mobile,
-            "var1"    => $type, 
-            "var2"    => $otp
+            "var1"    => $otp
         ]]
     ];
 
@@ -140,5 +141,3 @@ function send_sms($mobile, $otp, $type = "Forgot Password") {
     return in_array($httpCode, [200, 202]);
 }
 ?>
-
-
