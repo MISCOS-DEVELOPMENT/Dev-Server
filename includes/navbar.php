@@ -121,7 +121,7 @@
         </button>
         <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="loginDropdownMobile">
           <!-- <li><a class="dropdown-item gradient-organizer" href="admin_login.php"><i class="fas fa-user-tie me-2"></i> आयोजक</a></li> -->
-          <li><a class="dropdown-item gradient-participant" href="https://web.geetamahotsav.com/login"><i class="fas fa-user me-2"></i> प्रतिभागी</a></li>
+          <li><a class="dropdown-item gradient-participant" href="https://yellow-island-04d8bb200.3.azurestaticapps.net/login"><i class="fas fa-user me-2"></i> प्रतिभागी</a></li>
         </ul>
       </div>
 
