@@ -213,7 +213,7 @@ function send_mail($url, $email)  {
 }
 function send_sms($mobile, $url) {
     $authKey    = "472285A02FfvvxxWCo68e603a2P1";  
-    $templateId = "6914715d4810055a252d9b83";
+    $templateId = "6909b7e4a57e7718206c48cb";
     $postData = [
         "template_id" => $templateId,
         "short_url"   => 1,          
@@ -309,4 +309,3 @@ function send_sms($mobile, $url) {
 // }
 
 ?>
-

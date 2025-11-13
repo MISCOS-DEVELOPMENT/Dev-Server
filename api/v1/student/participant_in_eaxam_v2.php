@@ -17,7 +17,7 @@ ini_set('display_startup_errors', 1);
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, token, mode, Authorization");
+header("Access-Control-Allow-Headers: Content-Type, token, Cat-For, mode, Authorization");
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     echo json_encode(["status" => "OK - preflight"]);
@@ -42,8 +42,7 @@ $par_id             = isset($_POST['par_id']) ? $_POST['par_id'] : null;
 $reg_id             = isset($_POST['reg_id']) ? $_POST['reg_id'] : null;
 $cat_id             = isset($_POST['cat_id']) ? $_POST['cat_id'] : null;
 $slot_id            = isset($_POST['slot_id']) ? $_POST['slot_id'] : null;
-$par_update_count   = isset($_POST['slot_id']) ? $_POST['slot_id'] : null;
-$check_session = check_token($reg_id ,$token, $conn);
+// $check_session = check_token($reg_id ,$token, $conn);
 $query_for_check_partcipant = "SELECT par_id FROM participants_header_all WHERE cat_id = $cat_id AND reg_id = $reg_id";
 $query_for_check_partcipant_result = mysqli_query($conn, $query_for_check_partcipant);
 if (mysqli_num_rows($query_for_check_partcipant_result) > 0) {
@@ -53,6 +52,24 @@ if (mysqli_num_rows($query_for_check_partcipant_result) > 0) {
         "message"    => "already participant"
     ]);
     exit;
+}
+$query_for_slot_details = "SELECT s.slot_date, s.slot_start_time, c.cat_name FROM slot_details_all AS s JOIN category_header_all AS c ON s.cat_id = c.cat_id WHERE s.slot_id = $slot_id";
+$result_for_slot_details = mysqli_query($conn, $query_for_slot_details);
+if (mysqli_num_rows($result_for_slot_details) > 0) {
+    $data = mysqli_fetch_assoc($result_for_slot_details);
+    $slot_date = $data['slot_date']; 
+    $slot_start_time = $data['slot_start_time']; 
+    $cat_name = $data['cat_name'];
+    $formatted_time = date("h:i A", strtotime($slot_start_time));
+    $formatted_date = date("d-m-Y", strtotime($slot_date));
+    $slot_datetime = $formatted_date . ', ' . $formatted_time;
+}
+$query_user = "SELECT reg_mobile, reg_email FROM registration_header_all WHERE reg_id = $reg_id";
+$result_user = mysqli_query($conn, $query_user);
+if (mysqli_num_rows($result_user) > 0) {
+    $data_user = mysqli_fetch_assoc($result_user);
+    $reg_mobile = $data_user['reg_mobile']; 
+    $reg_email = $data_user['reg_email'];
 }
 $query_for_get_slot = "SELECT slot_booked_particepents, slot_permited_participents FROM slot_details_all WHERE slot_id = $slot_id";
 $query_for_get_slot_result = mysqli_query($conn, $query_for_get_slot);
@@ -88,7 +105,7 @@ try {
     }
     function getQuestions($conn, $cat_id, $weight, $limit) {
         $questions = [];
-        $sql = "SELECT que_id FROM question_header_all WHERE cat_id = $cat_id AND que_weightage = $weight AND que_status = 1 ORDER BY RAND() LIMIT $limit";
+        $sql = "SELECT que_id FROM question_header_all WHERE  cat_id = $cat_id AND que_weightage = $weight AND que_status = 1 ORDER BY RAND() LIMIT $limit";
         $result = $conn->query($sql);
         if ($result) {
             while ($row = $result->fetch_assoc()) {
@@ -101,7 +118,7 @@ try {
     $desired = [1 => 33, 2 => 33, 3 => 34]; 
     $selected_questions = [];
     foreach ($desired as $weight => $count) {
-        $qs = getQuestions($conn, $cat_id, $weight, $count);
+        $qs = getQuestions($conn, $cat_id, $weight, $count); 
         $selected_questions = array_merge($selected_questions, $qs);
     }
     $total_needed = $cat_permitted_que - count($selected_questions);
@@ -136,6 +153,7 @@ try {
         throw new Exception("Slot update failed: " . $conn->error);
     }
     $conn->commit(); 
+    send_sms($reg_mobile, $cat_name, $slot_datetime);
     $response =[
         "error_code" => "200",
         "status" => "success",
@@ -152,5 +170,91 @@ try {
 }
 $conn->close();
 echo json_encode($response);
+// function send_mail($otp, $email)  {
+//     $response ['email'] =  $email;
+//     $response ['test'] =  'test';
+//     $payload = [
+//         "recipients" => [
+//             [
+//                 "to" => [
+//                     [
+//                         "email" => $email,
+//                     ]
+//                 ],
+//                 "variables" => [
+//                     "VAR1" => $otp,               ]
+//             ]
+//         ],
+//         "from" => [
+//             "email" => "geetamahotsav@mpsthapanautsav.in"
+//         ],
+//         "domain" => "mpsthapanautsav.in",
+//         "template_id" => "geeta_otp"
+//     ];
+//     $ch = curl_init('https://control.msg91.com/api/v5/email/send');
+//     curl_setopt_array($ch, [
+//         CURLOPT_RETURNTRANSFER => true,
+//         CURLOPT_POST => true,
+//         CURLOPT_HTTPHEADER => [
+//             'Content-Type: application/json',
+//             'Accept: application/json',
+//             'authkey: 472285A02FfvvxxWCo68e603a2P1',
+//         ],
+//         CURLOPT_POSTFIELDS => json_encode($payload),
+//     ]);
+
+//     $response = curl_exec($ch);
+//     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+//     curl_close($ch);
+
+//     if (in_array($httpCode, [200, 202])) {
+//         return true;
+//     } else {
+//         error_log("Pending PO Email failed: HTTP $httpCode - " . $response);
+//         return false;
+//     }
+// }
+function send_sms($mobile, $exam, $time) {
+    $authKey    = "472285A02FfvvxxWCo68e603a2P1";  
+    $templateId = "6909b7d23b33771a7a361942";
+    // Prepare payload
+    $postData = [
+        "template_id" => $templateId,
+        "recipients"  => [[
+            "mobiles" => "91" . $mobile, 
+            "var1"    => $exam,
+            "var2"    => $time
+        ]]
+    ];
+    // Initialize CURL
+    $curl = curl_init();
+    curl_setopt_array($curl, [
+        CURLOPT_URL => "https://control.msg91.com/api/v5/flow/",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CUSTOMREQUEST  => "POST",
+        CURLOPT_POSTFIELDS     => json_encode($postData),
+        CURLOPT_HTTPHEADER     => [
+            "accept: application/json",
+            "authkey: $authKey",
+            "content-type: application/json"
+        ],
+    ]);
+    // Execute
+    $resp = curl_exec($curl);
+    $err  = curl_error($curl);
+    $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    curl_close($curl);
+    // Handle result
+    if ($err) {
+        error_log("SMS sending failed: " . $err);
+        return false;
+    }
+    if (in_array($httpCode, [200, 202])) {
+        return true;
+    } else {
+        error_log("SMS failed: HTTP $httpCode - " . $resp);
+        return false;
+    }
+}
 ?>
 

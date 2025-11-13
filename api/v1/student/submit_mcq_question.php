@@ -38,9 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 $ple_id      = isset($_POST['ple_id']) ? trim($_POST['ple_id']) : "";
 $par_id      = isset($_POST['par_id']) ? trim($_POST['par_id']) : "";
-$correct_ans = isset($_POST['correct_ans']) ? trim($_POST['correct_ans']) : "";
+$que_id      = isset($_POST['par_id']) ? trim($_POST['que_id']) : "";
+// $correct_ans = isset($_POST['correct_ans']) ? trim($_POST['correct_ans']) : "";
 $marked_ans  = isset($_POST['marked_ans']) ? trim($_POST['marked_ans']) : "";
-
 if (empty($ple_id)) {
     echo json_encode([
         "error_code" => 100,
@@ -49,16 +49,22 @@ if (empty($ple_id)) {
     ]);
     exit;
 }
-if (empty($marked_ans)) {
-    $question_status = 3; 
-} elseif ($marked_ans == $correct_ans) {
-    $question_status = 1; 
-} else {
-    $question_status = 2; 
-}
-
 try {
     $conn->begin_transaction();
+    $sql = "SELECT que_correct_option FROM question_header_all WHERE que_id = $que_id";
+    $result = $conn->query($sql);
+    if (!$result) {
+        throw new Exception("Error get data from question: " . $conn->error);
+    }
+    $row = $result->fetch_assoc();
+    $correct_ans = $row['que_correct_option'];
+    if (empty($marked_ans)) {
+        $question_status = 3; 
+    } elseif ($marked_ans == $correct_ans) {
+        $question_status = 1; 
+    } else {
+        $question_status = 2; 
+    }
     $sql_live = "UPDATE participant_live_exam_transaction_all SET marked_ans = '$marked_ans', question_status = $question_status WHERE ple_id = $ple_id";
     if (!$conn->query($sql_live)) {
         throw new Exception("Error updating participant_live_exam_transaction_all: " . $conn->error);

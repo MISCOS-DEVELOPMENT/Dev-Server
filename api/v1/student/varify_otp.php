@@ -121,7 +121,7 @@ function send_mail($user_name, $password, $email)  {
 }
 function send_sms($mobile, $user_id, $pass) {
     $authKey    = "472285A02FfvvxxWCo68e603a2P1";  
-    $templateId = "691461db734b5f51f85f9967";
+    $templateId = "6909b7f5c5b15123aa6c3c83";
     // Prepare payload
     $postData = [
         "template_id" => $templateId,
@@ -163,4 +163,3 @@ function send_sms($mobile, $user_id, $pass) {
 }
 
 ?>
-
