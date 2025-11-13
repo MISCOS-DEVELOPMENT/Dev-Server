@@ -1,0 +1,134 @@
+    :root {
+      --geeta-orange: #ff6600;
+      --geeta-saffron: #ff9933;
+      --geeta-gold: #ffcc00;
+      --geeta-cream: #fff7e6;
+      --geeta-dark: #663300;
+      --geeta-light: #ffebcc;
+    }
+    
+    body {
+      background: linear-gradient(135deg, var(--geeta-saffron), var(--geeta-orange), var(--geeta-dark));
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .launch-container {
+      max-width: 800px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .launch-header {
+      background: linear-gradient(to right, var(--geeta-orange), var(--geeta-saffron));
+      color: white;
+      padding: 25px 30px;
+      text-align: center;
+      position: relative;
+    }
+    
+    .launch-header h1 {
+      font-weight: 700;
+      margin-bottom: 5px;
+      font-size: 2.2rem;
+    }
+    
+    .launch-header p {
+      font-size: 1.2rem;
+      margin-bottom: 0;
+      opacity: 0.9;
+    }
+    
+    .launch-body {
+      padding: 30px;
+      text-align: center;
+    }
+    
+    .event-image {
+      max-width: 100%;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      margin-bottom: 25px;
+      border: 5px solid var(--geeta-light);
+    }
+    
+    .coming-soon {
+      background: linear-gradient(135deg, var(--geeta-gold), var(--geeta-orange));
+      color: white;
+      padding: 15px 25px;
+      border-radius: 50px;
+      display: inline-block;
+      font-weight: 700;
+      font-size: 1.5rem;
+      margin-bottom: 25px;
+      box-shadow: 0 5px 15px rgba(255, 102, 0, 0.3);
+      animation: pulse 2s infinite;
+    }
+    
+    .event-details {
+      background: var(--geeta-cream);
+      padding: 20px;
+      border-radius: 15px;
+      margin-top: 20px;
+      text-align: left;
+      border-left: 5px solid var(--geeta-orange);
+    }
+    
+    .event-details h3 {
+      color: var(--geeta-orange);
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+    
+    .event-details p {
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+    
+    .highlight {
+      color: var(--geeta-orange);
+      font-weight: 700;
+    }
+    
+    .footer-note {
+      margin-top: 25px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    .geeta-icon {
+      font-size: 2.5rem;
+      color: var(--geeta-orange);
+      margin-bottom: 15px;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    @media (max-width: 768px) {
+      .launch-header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .launch-header p {
+        font-size: 1rem;
+      }
+      
+      .coming-soon {
+        font-size: 1.2rem;
+      }
+    }
