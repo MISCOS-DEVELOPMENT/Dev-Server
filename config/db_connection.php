@@ -14,7 +14,7 @@ final class DB
             $port = getenv('DB_PORT') ?: '3306';
             $name = getenv('DB_NAME') ?: 'dev_geeta';
             $user = getenv('DB_USER') ?: 'dev_miscos';
-            $pass = getenv('DB_PASS') ?: 'x!^(mEBad1rYSsvA';
+            $pass = getenv('DB_PASS') ?: 'x!^(mEBad1r YSsvA';
             
             // For Azure Database - SSL is REQUIRED
             $this->conn = new \mysqli();
